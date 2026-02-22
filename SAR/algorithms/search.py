@@ -44,10 +44,37 @@ def uniformCostSearch(problem: SearchProblem):
     """
     Search the node of least total cost first.
     """
+    pInicial = problem.getStartState()
+    queue = utils.PriorityQueue()
+    bestCost = {pInicial: 0}
 
-    # TODO: Add your code here
-    utils.raiseNotDefined()
+    # nodo = (state, actions, cost)
+    queue.push((pInicial, [], 0), 0)
+    print("START:", pInicial)
 
+    while not queue.isEmpty():
+
+        state, actions, cost = queue.pop()
+
+        print("POP:", state, "cost:", cost)
+
+        if cost != bestCost.get(state, float('inf')):
+            continue
+
+        if problem.isGoalState(state):
+            print("ACTIONS:", actions)
+            print("COST CHECK:", problem.getCostOfActions(actions))
+            return actions
+
+        for succesor, action, stepCost in problem.getSuccessors(state):
+            newCost = cost + stepCost
+            newAction = actions + [action]
+
+            if newCost < bestCost.get(succesor, float('inf')):
+                bestCost[succesor] = newCost
+                queue.push((succesor, newAction, newCost), newCost)
+
+    return []
 
 def aStarSearch(problem: SearchProblem, heuristic=nullHeuristic):
     """
